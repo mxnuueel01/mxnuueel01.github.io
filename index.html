@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manuel Otero González - Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        .profile-section {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .profile-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            font-weight: bold;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+        }
+
+        nav {
+            background-color: rgba(51, 51, 51, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            margin: 0 0.3rem;
+            display: inline-block;
+            transition: all 0.3s;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            background-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            background: white;
+            margin: 2rem 0;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid #667eea;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        section h2::before {
+            content: '●';
+            color: #764ba2;
+            font-size: 1.5rem;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .timeline-item {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            padding-left: 2rem;
+            border-left: 4px solid #667eea;
+            background: linear-gradient(to right, rgba(102, 126, 234, 0.05), transparent);
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover {
+            border-left-width: 6px;
+            padding-left: 2.5rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+        }
+
+        .timeline-item h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .timeline-item .date {
+            color: #667eea;
+            font-style: italic;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .timeline-item p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .research-intro {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #764ba2;
+        }
+
+        .publications {
+            margin-top: 2rem;
+        }
+
+        .publications h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .publication-item {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+            transition: all 0.3s;
+        }
+
+        .publication-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .publication-item strong {
+            color: #333;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .publication-item em {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .publication-item a {
+            display: inline-block;
+            margin-top: 0.5rem;
+            color: #764ba2;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .publication-item a:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, #f9f9f9 0%, #fff 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            border-top: 4px solid #667eea;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
+        }
+
+        .project-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .project-card p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            object-fit: cover;
+        }
+
+        .contact-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .contact-box p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .contact-info a {
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .contact-info a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        footer {
+            background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .profile-image {
+                width: 150px;
+                height: 150px;
+                font-size: 3rem;
+            }
+
+            nav a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            section {
+                padding: 1.5rem;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-info a {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="profile-section">
+            <!-- Reemplaza el siguiente div con: <img src="tu-foto.jpg" alt="Manuel Otero González" class="profile-image"> -->
+            <div class="profile-image">MO</div>
+            <div>
+                <h1>Manuel Otero González</h1>
+                <p>Investigador en IA | Especialista en Audio y Deepfakes</p>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <a href="#sobre-mi">Sobre Mí</a>
+        <a href="#trayectoria">Trayectoria</a>
+        <a href="#investigacion">Investigación</a>
+        <a href="#proyectos">Proyectos</a>
+        <a href="#contacto">Contacto</a>
+    </nav>
+
+    <div class="container">
+        <section id="sobre-mi">
+            <h2>Sobre Mí</h2>
+            <div class="about-content">
+                <p>Investigador especializado en inteligencia artificial con enfoque en procesamiento de audio y detección de deepfakes. Mi trabajo combina el análisis de voz, machine learning y tecnologías de verificación biométrica para desarrollar soluciones que protejan la integridad de la información en la era digital.</p>
+                <p>Actualmente formo parte de Momentum, donde continúo explorando las fronteras entre la seguridad digital y la inteligencia artificial aplicada al reconocimiento de voz.</p>
+            </div>
+        </section>
+
+        <section id="trayectoria">
+            <h2>Trayectoria Profesional</h2>
+            
+            <div class="timeline-item">
+                <h3>Momentum</h3>
+                <div class="date">2025 - Presente</div>
+                <p>Desarrollo de soluciones innovadoras en inteligencia artificial, con especial énfasis en análisis de voz y detección de contenido sintético.</p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>Investigador - Grupo Universitario Audias</h3>
+                <div class="date">2025</div>
+                <p>Investigación en reconocimiento de voz y biometría aplicada a celebridades españolas. Desarrollo de datasets y modelos de machine learning para identificación de hablantes.</p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>Formación Académica</h3>
+                <div class="date">2023 - 2025</div>
+                <p><strong>Máster</strong> - Especialización en áreas relacionadas con Inteligencia Artificial y procesamiento de señales.</p>
+                <div class="date">2019 - 2023</div>
+                <p><strong>Grado</strong> - Formación universitaria en el ámbito tecnológico.</p>
+            </div>
+        </section>
+
+        <section id="investigacion">
+            <h2>Investigación</h2>
+            <div class="research-intro">
+                <p>Mi investigación se centra en el desarrollo de tecnologías para la detección y análisis de audio sintético, reconocimiento biométrico de voz, y la creación de sistemas robustos contra deepfakes de audio. Utilizo técnicas avanzadas de machine learning y procesamiento de señales para abordar los desafíos de seguridad en la comunicación digital moderna.</p>
+            </div>
+            
+            <div class="publications">
+                <h3>Publicaciones Destacadas</h3>
+                
+                <div class="publication-item">
+                    <strong>VoxCeleb-ESP: Preliminary Experiments Detecting Spanish Celebrities from Their Voices</strong>
+                    <em>2023</em>
+                    <p>Investigación pionera en el desarrollo de un dataset para el reconocimiento de celebridades españolas mediante análisis de voz. Este trabajo establece las bases para sistemas de verificación biométrica en el contexto hispanohablante.</p>
+                    <a href="https://arxiv.org/abs/2401.09441" target="_blank">📄 Ver publicación en arXiv →</a>
+                </div>
+                
+                <div class="publication-item">
+                    <strong>Próximas Publicaciones</strong>
+                    <em>En desarrollo</em>
+                    <p>Trabajos en curso sobre detección de deepfakes y nuevas técnicas de análisis forense de audio.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="proyectos">
+            <h2>Proyectos</h2>
+            
+            <div class="project-grid">
+                <div class="project-card">
+                    <!-- Reemplaza con: <img src="proyecto1.jpg" alt="Detección Deepfakes" class="project-image"> -->
+                    <div class="project-image">🔊</div>
+                    <h3>Detección de Deepfakes en Audio y Voz</h3>
+                    <p>Desarrollo de algoritmos avanzados para identificar y analizar contenido de audio sintético. Implementación de modelos de deep learning para distinguir entre voz real y generada artificialmente, con aplicaciones en seguridad y verificación de identidad.</p>
+                </div>
+
+                <div class="project-card">
+                    <!-- Reemplaza con: <img src="proyecto2.jpg" alt="Próximo proyecto" class="project-image"> -->
+                    <div class="project-image">🚀</div>
+                    <h3>Próximamente</h3>
+                    <p>Nuevos proyectos en desarrollo relacionados con inteligencia artificial aplicada al procesamiento de señales y seguridad digital. Mantente atento para más actualizaciones.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacto">
+            <h2>Contacto</h2>
+            <div class="contact-box">
+                <p>¿Interesado en colaborar o conocer más sobre mi trabajo en IA y seguridad de audio? Estaré encantado de conversar contigo.</p>
+                
+                <div class="contact-info">
+                    <a href="mailto:manuel.otero@cchs.csic.es">📧 Email</a>
+                    <a href="https://linkedin.com/in/manuel-otero-gonzalez" target="_blank">💼 LinkedIn</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Creado por Manuel Otero González. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
