@@ -607,21 +607,22 @@
     </footer>
 
     <script>
-        let hasLiked = false;
+        let hasLiked = localStorage.getItem('user-has-liked') === 'true';
+        const NAMESPACE = 'manuel-otero-portfolio';
+        const KEY = 'total-likes';
 
         async function loadLikes() {
             try {
-                const result = await window.storage.get('portfolio-likes', true);
-                const count = result ? parseInt(result.value) : 0;
+                const response = await fetch(`https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`);
+                const data = await response.json();
+                const count = data.value || 0;
                 document.getElementById('likesCount').textContent = count;
 
-                const userLike = await window.storage.get('user-has-liked', false);
-                if (userLike) {
-                    hasLiked = true;
+                if (hasLiked) {
                     updateLikeButton();
                 }
             } catch (error) {
-                console.log('Inicializando contador de likes');
+                console.error('Error al cargar likes:', error);
                 document.getElementById('likesCount').textContent = '0';
             }
         }
@@ -630,21 +631,28 @@
             const button = document.getElementById('likeButton');
             
             try {
-                const result = await window.storage.get('portfolio-likes', true);
-                let currentLikes = result ? parseInt(result.value) : 0;
-
                 if (!hasLiked) {
-                    currentLikes++;
+                    // Incrementar like
+                    const response = await fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`);
+                    const data = await response.json();
+                    document.getElementById('likesCount').textContent = data.value;
+                    
                     hasLiked = true;
-                    await window.storage.set('user-has-liked', 'true', false);
+                    localStorage.setItem('user-has-liked', 'true');
                 } else {
-                    currentLikes = Math.max(0, currentLikes - 1);
+                    // Decrementar like (usando update con valor negativo)
+                    const currentResponse = await fetch(`https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`);
+                    const currentData = await currentResponse.json();
+                    const newValue = Math.max(0, currentData.value - 1);
+                    
+                    const response = await fetch(`https://api.countapi.xyz/set/${NAMESPACE}/${KEY}?value=${newValue}`);
+                    const data = await response.json();
+                    document.getElementById('likesCount').textContent = data.value;
+                    
                     hasLiked = false;
-                    await window.storage.delete('user-has-liked', false);
+                    localStorage.removeItem('user-has-liked');
                 }
 
-                await window.storage.set('portfolio-likes', currentLikes.toString(), true);
-                document.getElementById('likesCount').textContent = currentLikes;
                 updateLikeButton();
 
                 button.style.animation = 'none';
@@ -653,6 +661,7 @@
                 }, 10);
             } catch (error) {
                 console.error('Error al procesar like:', error);
+                alert('Hubo un error al procesar tu like. Por favor, intenta de nuevo.');
             }
         }
 
@@ -672,7 +681,17 @@
             }
         }
 
-        loadLikes();
+        // Inicializar contador si no existe
+        async function initCounter() {
+            try {
+                await fetch(`https://api.countapi.xyz/create?namespace=${NAMESPACE}&key=${KEY}&value=0`);
+            } catch (error) {
+                console.log('Contador ya existe o error al crear');
+            }
+            loadLikes();
+        }
+
+        initCounter();
     </script>
     
 </body>
