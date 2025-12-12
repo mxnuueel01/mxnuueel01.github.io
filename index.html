@@ -376,6 +376,64 @@
             opacity: 0.8;
         }
 
+        .likes-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .likes-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .like-button {
+            background: linear-gradient(135deg, #0093E9 0%, #16C79A 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 147, 233, 0.3);
+            font-weight: bold;
+        }
+
+        .like-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 147, 233, 0.5);
+        }
+
+        .like-button:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .like-button.liked {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
+        }
+
+        .likes-count {
+            font-size: 1.5rem;
+            color: #0093E9;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .likes-count span {
+            font-size: 2rem;
+        }
+
         @media (max-width: 768px) {
             header h1 {
                 font-size: 2rem;
@@ -533,5 +591,75 @@
     <footer>
         <p>&copy; 2025 Creado por Manuel Otero González. Todos los derechos reservados.</p>
     </footer>
+
+    <script>
+        let hasLiked = false;
+
+        async function loadLikes() {
+            try {
+                const result = await window.storage.get('portfolio-likes', true);
+                const count = result ? parseInt(result.value) : 0;
+                document.getElementById('likesCount').textContent = count;
+
+                const userLike = await window.storage.get('user-has-liked', false);
+                if (userLike) {
+                    hasLiked = true;
+                    updateLikeButton();
+                }
+            } catch (error) {
+                console.log('Inicializando contador de likes');
+                document.getElementById('likesCount').textContent = '0';
+            }
+        }
+
+        async function toggleLike() {
+            const button = document.getElementById('likeButton');
+            
+            try {
+                const result = await window.storage.get('portfolio-likes', true);
+                let currentLikes = result ? parseInt(result.value) : 0;
+
+                if (!hasLiked) {
+                    currentLikes++;
+                    hasLiked = true;
+                    await window.storage.set('user-has-liked', 'true', false);
+                } else {
+                    currentLikes = Math.max(0, currentLikes - 1);
+                    hasLiked = false;
+                    await window.storage.delete('user-has-liked', false);
+                }
+
+                await window.storage.set('portfolio-likes', currentLikes.toString(), true);
+                document.getElementById('likesCount').textContent = currentLikes;
+                updateLikeButton();
+
+                button.style.animation = 'none';
+                setTimeout(() => {
+                    button.style.animation = '';
+                }, 10);
+            } catch (error) {
+                console.error('Error al procesar like:', error);
+            }
+        }
+
+        function updateLikeButton() {
+            const button = document.getElementById('likeButton');
+            const icon = document.getElementById('likeIcon');
+            const text = document.getElementById('likeText');
+
+            if (hasLiked) {
+                button.classList.add('liked');
+                icon.textContent = '❤️';
+                text.textContent = '¡Te gusta!';
+            } else {
+                button.classList.remove('liked');
+                icon.textContent = '👍';
+                text.textContent = 'Me gusta';
+            }
+        }
+
+        loadLikes();
+    </script>
+    
 </body>
 </html>
