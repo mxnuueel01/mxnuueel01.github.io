@@ -306,6 +306,23 @@
             object-fit: cover;
         }
 
+        .project-image-container {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #0093E9 0%, #80D0C7 100%);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .project-logo-circular {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+        }
+
         .contact-box {
             background: linear-gradient(135deg, rgba(0, 147, 233, 0.1), rgba(22, 199, 154, 0.1));
             padding: 2rem;
@@ -437,14 +454,14 @@
             <div class="timeline-item">
                 <h3>Personal Investigador - AUDIAS (Audio, Data Intelligence and Speech) - UAM</h3>
                 <div class="date">2025</div>
-                <p>Investigación en reconocimiento de emociones en audio.</p>
+                <p>Investigación en el campo del reconocimiento de emociones en audio utilizando arquitecturas basadas en modelos fundacionales entrenados en bases de datos como MSP-Podcast. Mi trabajo se centra en un enfoque multimodal (audio y texto) y en estrategias de fusión para mejorar la robustez del sistema.</p>
             </div>
 
             <div class="timeline-item">
                 <h3>Formación Académica</h3>
                 <div class="date">2023 - 2025</div>
                 <p><strong>Máster Universitario en Deep Learning for Audio and Video Signal Processing</strong> - Universidad Autónoma de Madrid.</p>
-                
+                <br><br>
                 <div class="date">2019 - 2023</div>
                 <p><strong>Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación (EUR-ACE®)</strong> - Universidad Autónoma de Madrid.</p>
             </div>
@@ -453,8 +470,9 @@
         <section id="investigacion">
             <h2>Investigación</h2>
             <div class="research-intro">
-                <p>Actualmente me centro en la detección de deepfakes y en la verificación de locutor en audios manipulados. Aunque mi trayectoria comenzó en el reconocimiento de locutor, desarrollando un pequeño corpus llamado Voxceleb-Spain. Posteriormente, empecé a investigar en tareas de reconocimiento de emociones en audio trabajando con datos, primero de la evaluación EmoSpeech 2024 y más tarde con datos del desafío Speech Emotion Recognition in Naturalistic Conditions llevado a cabo en InterSpeech 2025.</p>
+                <p>Actualmente me centro en la detección de deepfakes y en la verificación de locutor en audios manipulados. </p>
             </div>
+
             
             <div class="publications">
                 <h3>Publicaciones Destacadas</h3>
@@ -479,9 +497,9 @@
             
             <div class="project-grid">
                 <div class="project-card">
-                    <!-- Reemplaza con: <img src="Logo-Momentum.png" alt="Detección Deepfakes" class="project-image"> -->
-                    <!-- <div class="project-image">🔊</div> -->
-                    <img src="Logo-Momentum.png" alt="Detección Deepfakes" class="project-image">
+                    <div class="project-image-container">
+                        <img src="Logo-Momentum.png" alt="Logo Momentum" class="project-logo-circular">
+                    </div>
                     <h3>Detección de Deepfakes en Audio y Voz</h3>
                     <p>En este proyecto se busca combinar sistemas automáticos de verificación de hablantes con conocimientos lingüístico-fonéticos para diferenciar voces reales de deepfakes.</p>
                 </div>
