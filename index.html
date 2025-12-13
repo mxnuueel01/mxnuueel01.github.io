@@ -607,133 +607,132 @@
     </footer>
 
     <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { 
-        getFirestore, doc, getDoc, setDoc, updateDoc 
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { initializeApp } from "firebase/app";
-    import { getAnalytics } from "firebase/analytics";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getFirestore, doc, getDoc, setDoc, updateDoc 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 
-    // 1. CONFIGURACIÓN DE FIREBASE (Rellena con tus datos)
-    const firebaseConfig = {
-      apiKey: "AIzaSyDlBCsE2ysv6-FHv_gDGCZ1J3v9HXZPh_A",
-      authDomain: "contador-likes-e7464.firebaseapp.com",
-      projectId: "contador-likes-e7464",
-      storageBucket: "contador-likes-e7464.firebasestorage.app",
-      messagingSenderId: "158271767178",
-      appId: "1:158271767178:web:901922a4ae7720e7aa2373",
-      measurementId: "G-95Z42SNPVQ"
-    };
+        // CONFIGURACIÓN DE FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlBCsE2ysv6-FHv_gDGCZ1J3v9HXZPh_A",
+            authDomain: "contador-likes-e7464.firebaseapp.com",
+            projectId: "contador-likes-e7464",
+            storageBucket: "contador-likes-e7464.firebasestorage.app",
+            messagingSenderId: "158271767178",
+            appId: "1:158271767178:web:901922a4ae7720e7aa2373",
+            measurementId: "G-95Z42SNPVQ"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const analytics = getAnalytics(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const analytics = getAnalytics(app);
 
-    // 2. VARIABLES LOCALES (SIN CAMBIOS)
-    let hasLiked = localStorage.getItem('user-has-liked') === 'true';
-    const COLLECTION = "likes";
-    const DOC_ID = "portfolio";
+        // VARIABLES LOCALES
+        let hasLiked = localStorage.getItem('user-has-liked') === 'true';
+        const COLLECTION = "likes";
+        const DOC_ID = "portfolio";
 
-    // 3. LEER CONTADOR GLOBAL DESDE FIREBASE
-    async function loadLikes() {
-        try {
-            const ref = doc(db, COLLECTION, DOC_ID);
-            const snap = await getDoc(ref);
+        // LEER CONTADOR GLOBAL DESDE FIREBASE
+        async function loadLikes() {
+            try {
+                const ref = doc(db, COLLECTION, DOC_ID);
+                const snap = await getDoc(ref);
 
-            let count = 0;
+                let count = 0;
 
-            if (snap.exists()) {
-                count = snap.data().count || 0;
+                if (snap.exists()) {
+                    count = snap.data().count || 0;
+                }
+
+                document.getElementById('likesCount').textContent = count;
+
+                if (hasLiked) {
+                    updateLikeButton();
+                }
+            } catch (error) {
+                console.error("Error al cargar likes:", error);
+                document.getElementById('likesCount').textContent = "0";
             }
+        }
 
-            document.getElementById('likesCount').textContent = count;
+        // LIKE / UNLIKE GLOBAL CON FIREBASE
+        async function toggleLike() {
+            const button = document.getElementById('likeButton');
+            const ref = doc(db, COLLECTION, DOC_ID);
+
+            try {
+                const snap = await getDoc(ref);
+                let current = snap.exists() ? snap.data().count || 0 : 0;
+
+                let newValue;
+
+                if (!hasLiked) {
+                    // AUMENTAR LIKE
+                    newValue = current + 1;
+                    hasLiked = true;
+                    localStorage.setItem('user-has-liked', 'true');
+                } else {
+                    // DISMINUIR LIKE
+                    newValue = Math.max(0, current - 1);
+                    hasLiked = false;
+                    localStorage.removeItem('user-has-liked');
+                }
+
+                await updateDoc(ref, { count: newValue });
+
+                document.getElementById('likesCount').textContent = newValue;
+                updateLikeButton();
+
+                // pequeña animación
+                button.style.animation = 'none';
+                setTimeout(() => { button.style.animation = ''; }, 10);
+
+            } catch (error) {
+                console.error("Error al procesar el like:", error);
+                alert("Hubo un error al procesar tu like. Por favor, intenta de nuevo.");
+            }
+        }
+
+        // ACTUALIZAR ESTADO VISUAL DEL BOTÓN
+        function updateLikeButton() {
+            const button = document.getElementById('likeButton');
+            const icon = document.getElementById('likeIcon');
+            const text = document.getElementById('likeText');
 
             if (hasLiked) {
-                updateLikeButton();
-            }
-        } catch (error) {
-            console.error("Error al cargar likes:", error);
-            document.getElementById('likesCount').textContent = "0";
-        }
-    }
-
-    // 4. LIKE / UNLIKE GLOBAL CON FIREBASE
-    async function toggleLike() {
-        const button = document.getElementById('likeButton');
-        const ref = doc(db, COLLECTION, DOC_ID);
-
-        try {
-            const snap = await getDoc(ref);
-            let current = snap.exists() ? snap.data().count || 0 : 0;
-
-            let newValue;
-
-            if (!hasLiked) {
-                // AUMENTAR LIKE
-                newValue = current + 1;
-                hasLiked = true;
-                localStorage.setItem('user-has-liked', 'true');
+                button.classList.add('liked');
+                icon.textContent = '❤️';
+                text.textContent = '¡Te gusta!';
             } else {
-                // DISMINUIR LIKE
-                newValue = Math.max(0, current - 1);
-                hasLiked = false;
-                localStorage.removeItem('user-has-liked');
+                button.classList.remove('liked');
+                icon.textContent = '👍';
+                text.textContent = 'Me gusta';
+            }
+        }
+
+        // INICIALIZAR CONTADOR EN FIREBASE
+        async function initCounter() {
+            const ref = doc(db, COLLECTION, DOC_ID);
+
+            try {
+                const snap = await getDoc(ref);
+                if (!snap.exists()) {
+                    await setDoc(ref, { count: 0 });
+                }
+            } catch (error) {
+                console.error("Error al crear contador:", error);
             }
 
-            await updateDoc(ref, { count: newValue });
-
-            document.getElementById('likesCount').textContent = newValue;
-            updateLikeButton();
-
-            // pequeña animación
-            button.style.animation = 'none';
-            setTimeout(() => { button.style.animation = ''; }, 10);
-
-        } catch (error) {
-            console.error("Error al procesar el like:", error);
-            alert("Hubo un error al procesar tu like. Por favor, intenta de nuevo.");
-        }
-    }
-
-    // 5. ACTUALIZAR ESTADO VISUAL DEL BOTÓN
-    function updateLikeButton() {
-        const button = document.getElementById('likeButton');
-        const icon = document.getElementById('likeIcon');
-        const text = document.getElementById('likeText');
-
-        if (hasLiked) {
-            button.classList.add('liked');
-            icon.textContent = '❤️';
-            text.textContent = '¡Te gusta!';
-        } else {
-            button.classList.remove('liked');
-            icon.textContent = '👍';
-            text.textContent = 'Me gusta';
-        }
-    }
-
-    // 6. INICIALIZAR CONTADOR EN FIREBASE (solo si no existe)
-    async function initCounter() {
-        const ref = doc(db, COLLECTION, DOC_ID);
-
-        try {
-            const snap = await getDoc(ref);
-            if (!snap.exists()) {
-                await setDoc(ref, { count: 0 });
-            }
-        } catch (error) {
-            console.error("Error al crear contador:", error);
+            loadLikes();
         }
 
-        loadLikes();
-    }
+        // Hacer accesible la función toggleLike globalmente
+        window.toggleLike = toggleLike;
 
-    initCounter();
-
-    // Hacer accesible la función toggleLike al HTML
-    window.toggleLike = toggleLike;
-
-</script>
+        // Inicializar
+        initCounter();
+    </script>
     
 </body>
 </html>
