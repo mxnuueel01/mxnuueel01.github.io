@@ -387,9 +387,10 @@
 
         .likes-container {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;       
             align-items: center;
-            gap: 1rem;
+            justify-content: center;
+            gap: 2rem;                 
         }
 
         .like-button {
@@ -469,6 +470,11 @@
 
             .contact-info a {
                 width: 80%;
+            }
+
+            .likes-container {
+                flex-direction: column;    
+                gap: 1rem;
             }
         }
     </style>
